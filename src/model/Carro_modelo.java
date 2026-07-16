@@ -1,3 +1,4 @@
+package model;
 public class Carro_modelo {
     //Inicializar variables
     public String placa_carro = "";
@@ -25,3 +26,4 @@ public class Carro_modelo {
     public void setMarca_carro(String marca_carro) { this.marca_carro = marca_carro; }
     public void setModelo_carro(String modelo_carro) { this.modelo_carro = modelo_carro; }
 }
+
