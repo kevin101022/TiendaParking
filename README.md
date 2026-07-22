@@ -1,21 +1,47 @@
 # TiendaParking
 
-Proyecto de gestión de parqueadero y registro de viajes en Java.
+Proyecto desarrollado en Java como ejercicio de programación orientada a objetos aplicando el patrón **MVC** (Modelo - Vista - Controlador).
 
-## Modelos del Sistema
+## ¿De qué trata?
 
-El proyecto cuenta con las siguientes entidades en el paquete `model`:
+Sistema de consola para el registro básico de los elementos de un servicio de transporte: chofer, carro, motor y pasajero.
 
-* **`Carro_modelo`**: Representa a los vehículos con los atributos de placa, color, marca y modelo.
-* **`Motor_modelo`**: Almacena el tipo de motor, los caballos de fuerza y el número de serie.
-* **`chofer_modelo`**: Almacena la información del chofer incluyendo cédula, nombre, apellido y su tipo de licencia.
-* **`Pasajero_modelo`**: Almacena los datos del pasajero (cédula y nombre completo).
-* **`FichaViaje_modelo`**: Estructura de datos que unifica y centraliza toda la información de un viaje (Carro, Motor, Chofer y Pasajero) en un único registro.
+No tiene base de datos. El objetivo es practicar la estructura MVC y la separación de responsabilidades entre capas.
 
-## API y Simulación de Base de Datos
+## Estructura del proyecto
 
-La clase **`Api_Modelo`** actúa como la capa de conexión y de negocio con la base de datos simulada:
+```
+src/
+├── model/       → Clases de datos y reglas de negocio (validaciones)
+├── controller/  → Intermediarios entre la vista y el modelo
+├── views/       → Captura de datos por consola (Scanner)
+└── main/        → Punto de entrada del programa
+```
 
-* **Conexión**: Métodos `validar_conexion()` (verifica clave `"1234"`) y `desconexion()`.
-* **Estructura Temporal**: Utiliza un `ArrayList<FichaViaje_modelo>` llamado `temporal_viajes` para guardar temporalmente las fichas de viaje de manera externa antes de persistirlas.
-* **CRUD de Consola**: Métodos para ingresar, buscar y eliminar información de carros, motores, choferes y pasajeros.
+## Cómo ejecutar
+
+Compilar desde la raíz del proyecto:
+```bash
+javac -d bin src/model/*.java src/controller/*.java src/views/*.java src/main/*.java
+```
+
+Ejecutar:
+```bash
+java -cp bin main.Tiendaparking
+```
+
+## Validaciones incluidas
+
+Cada entidad valida sus datos antes de registrarse:
+
+- **Chofer** → nombre, apellido, cédula (solo números) y licencia no pueden estar vacíos.
+- **Carro** → placa (mínimo 3 caracteres), color, marca y modelo obligatorios.
+- **Motor** → tipo, número de serie requeridos; caballos de fuerza debe ser un número mayor a 0.
+- **Pasajero** → nombre, apellido y cédula (solo números) obligatorios.
+
+Si algún dato no cumple la regla, el sistema muestra el error correspondiente sin detener el programa.
+
+## Tecnologías
+
+- Java 24
+- Sin dependencias externas
