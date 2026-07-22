@@ -1,7 +1,5 @@
 package model;
 
-import java.util.ArrayList;
-
 public class Api_Modelo {
     // Inicializar variables
     public String root = "";
@@ -110,28 +108,5 @@ public class Api_Modelo {
     //eliminar motor
     public void eliminar_motor(String tipo_motor) {
         System.out.println("Motor se esta eliminando...");
-    }
-
-       // Estructura temporal
-    public ArrayList<FichaViaje_modelo> temporal_viajes = new ArrayList<>();
-
-    // Guardar temporalmente la ficha de viaje en la estructura externa
-    public void guardar_temporal_viaje(FichaViaje_modelo viaje) {
-        temporal_viajes.add(viaje);
-        System.out.println("Ficha de viaje guardada temporalmente en la estructura externa.");
-    }
-
-    // Enviar todas las fichas de viaje a la base de datos
-    public void enviar_viajes_a_base_de_datos() {
-        System.out.println("Enviando fichas de viaje a la base de datos...");
-        for (FichaViaje_modelo viaje : temporal_viajes) {
-            System.out.println("Registrando informacion del viaje:");
-            ingresar_carro(viaje.getCarro().getPlaca_carro());
-            ingresar_motor(viaje.getMotor().getTipo_motor());
-            registrar_chofer(viaje.getChofer().getCedula_chofer());
-            ingresar_pasajero(viaje.getPasajero().getCedula_pasajero());
-        }
-        temporal_viajes.clear();
-        System.out.println("Envio completado y estructura temporal vaciada.");
     }
 }

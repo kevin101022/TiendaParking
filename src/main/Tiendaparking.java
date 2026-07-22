@@ -1,48 +1,31 @@
 package main;
-import model.Carro_modelo;
-import model.Motor_modelo;
-import model.Pasajero_modelo;
-import model.chofer_modelo;
+
+import java.util.Scanner;
+import views.Carro_vista;
+import views.Chofer_vista;
+import views.Motor_vista;
+import views.Pasajero_vista;
 
 public class Tiendaparking {
     public static void main(String[] args) {
-        
-        //clase chofer_modelo
-        chofer_modelo chofer = new chofer_modelo("Kevin", "Rivera", " 1122334455", "Tipo B");
-        chofer.setNombre_chofer("Andres");
+        Scanner teclado = new Scanner(System.in);
 
-        String dato_nombre = chofer.getNombre_chofer();
-        System.out.println("Nombre chofer: " + dato_nombre);
-        
-        //clase carro_modelo
-        Carro_modelo carro = new Carro_modelo("xjh-1010", "Negro", "Mustang", "2024");
-        carro.setPlaca_carro("xjh-1010");
+        System.out.println("REGISTRO DE CHOFER");
+        Chofer_vista vistaChofer = new Chofer_vista();
+        vistaChofer.registrar_chofer(teclado);
 
-        String dato_placa = carro.getPlaca_carro();
-        System.out.println("Placa carro: " + dato_placa);
+        System.out.println("\nREGISTRO DE CARRO");
+        Carro_vista vistaCarro = new Carro_vista();
+        vistaCarro.registrar_carro(teclado);
 
-        //clase Motor_modelo
-        Motor_modelo motor = new Motor_modelo("Eléctrico", "500", "SN-987654");
-        motor.setTipo_motor("Eléctrico");
-        motor.setCaballos_fuerza("500");
+        System.out.println("REGISTRO DE MOTOR");
+        Motor_vista vistaMotor = new Motor_vista();
+        vistaMotor.registrar_motor(teclado);
 
-        String dato_tipo_motor = motor.getTipo_motor();
-        System.out.println("Tipo de motor: " + dato_tipo_motor);
+        System.out.println("REGISTRO DE PASAJERO");
+        Pasajero_vista vistaPasajero = new Pasajero_vista();
+        vistaPasajero.registrar_pasajero(teclado);
 
-        String dato_caballos_fuerza = motor.getCaballos_fuerza();
-        System.out.println("Caballos de fuerza: " + dato_caballos_fuerza);
-
-        //clase Pasajero_modelo
-        Pasajero_modelo pasajero = new Pasajero_modelo("Jose", "Vera", " 99887755");
-        pasajero.setNombre_pasajero("Andres");
-
-        String dato_nombre_pasajero = pasajero.getNombre_pasajero();
-        System.out.println("Nombre pasajero: " + dato_nombre_pasajero);
-
-        String dato_apellido_pasajero = pasajero.getApellido_pasajero();
-        System.out.println("Apellido pasajero: " + dato_apellido_pasajero);
-
-        String dato_cedula_pasajero = pasajero.getCedula_pasajero();
-        System.out.println("Cedula pasajero: " + dato_cedula_pasajero);
+        teclado.close();
     }
 }

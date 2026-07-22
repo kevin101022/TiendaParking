@@ -1,4 +1,5 @@
 package model;
+
 public class chofer_modelo {
 
     // Inicializar variables
@@ -9,10 +10,42 @@ public class chofer_modelo {
 
     // Constructor
     public chofer_modelo(String dato_nombre, String dato_apellido, String dato_cedula, String dato_licencia){
-        this.nombre_chofer = dato_nombre;
-        this.apellido_chofer = dato_apellido;
-        this.cedula_chofer = dato_cedula;
-        this.licencia_chofer = dato_licencia;
+        this.nombre_chofer = validarNombre(dato_nombre);
+        this.apellido_chofer = validarApellido(dato_apellido);
+        this.cedula_chofer = validarCedula(dato_cedula);
+        this.licencia_chofer = validarLicencia(dato_licencia);
+    }
+
+    // holis, aqui estan las Reglas de negocio / Validaciones
+    public String validarNombre(String nombre) {
+        if (nombre == null || nombre.trim().isEmpty()) {
+            throw new IllegalArgumentException("El nombre del chofer no puede estar vacío.");
+        }
+        return nombre.trim();
+    }
+
+    public String validarApellido(String apellido) {
+        if (apellido == null || apellido.trim().isEmpty()) {
+            throw new IllegalArgumentException("El apellido del chofer no puede estar vacío.");
+        }
+        return apellido.trim();
+    }
+
+    public String validarCedula(String cedula) {
+        if (cedula == null || cedula.trim().isEmpty()) {
+            throw new IllegalArgumentException("La cédula del chofer no puede estar vacía.");
+        }
+        if (!cedula.trim().matches("\\d+")) {
+            throw new IllegalArgumentException("La cédula del chofer debe contener solo números.");
+        }
+        return cedula.trim();
+    }
+
+    public String validarLicencia(String licencia) {
+        if (licencia == null || licencia.trim().isEmpty()) {
+            throw new IllegalArgumentException("La licencia del chofer no puede estar vacía.");
+        }
+        return licencia.trim();
     }
 
     // Getters
@@ -22,8 +55,8 @@ public class chofer_modelo {
     public String getLicencia_chofer() { return licencia_chofer; }
 
     // Setters
-    public void setNombre_chofer(String nombre_chofer) { this.nombre_chofer = nombre_chofer; }
-    public void setApellido_chofer(String apellido_chofer) { this.apellido_chofer = apellido_chofer; }
-    public void setCedula_chofer(String cedula_chofer) { this.cedula_chofer = cedula_chofer; }
-    public void setLicencia_chofer(String licencia_chofer) { this.licencia_chofer = licencia_chofer; }
+    public void setNombre_chofer(String nombre_chofer) { this.nombre_chofer = validarNombre(nombre_chofer); }
+    public void setApellido_chofer(String apellido_chofer) { this.apellido_chofer = validarApellido(apellido_chofer); }
+    public void setCedula_chofer(String cedula_chofer) { this.cedula_chofer = validarCedula(cedula_chofer); }
+    public void setLicencia_chofer(String licencia_chofer) { this.licencia_chofer = validarLicencia(licencia_chofer); }
 }
