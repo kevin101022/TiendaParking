@@ -14,7 +14,7 @@ public class Tiendaparking {
         Chofer_vista vistaChofer = new Chofer_vista();
         vistaChofer.registrar_chofer(teclado);
 
-        System.out.println("\nREGISTRO DE CARRO");
+        System.out.println("REGISTRO DE CARRO");
         Carro_vista vistaCarro = new Carro_vista();
         vistaCarro.registrar_carro(teclado);
 
