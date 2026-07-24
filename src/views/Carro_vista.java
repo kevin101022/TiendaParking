@@ -1,12 +1,13 @@
 package views;
 
 import java.util.Scanner;
-import controller.Carro_controlador;
+import controller.Controlador;
 import model.Carro_modelo;
 
 public class Carro_vista {
 
     public void registrar_carro(Scanner obj_teclado) {
+        System.out.println("REGISTRO DE CARRO");
 
         String placa_carro = "";
         while (placa_carro.trim().isEmpty() || placa_carro.trim().length() < 3) {
@@ -46,7 +47,7 @@ public class Carro_vista {
             }
         }
 
-        Carro_controlador obj_controller = new Carro_controlador();
+        Controlador obj_controller = new Controlador();
         try {
             Carro_modelo obj_carro = obj_controller.registrarCarro(placa_carro, color_carro, marca_carro, modelo_carro);
             System.out.println("Carro registrado correctamente:\n"
@@ -54,7 +55,7 @@ public class Carro_vista {
                     + "Color del carro: " + obj_carro.getColor_carro() + "\n"
                     + "Marca del carro: " + obj_carro.getMarca_carro() + "\n"
                     + "Modelo del carro: " + obj_carro.getModelo_carro());
-        } catch (IllegalArgumentException e) {
+        } catch (RuntimeException e) {
             System.out.println("Error de validación: " + e.getMessage());
         }
     }

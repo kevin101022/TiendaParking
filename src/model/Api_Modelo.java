@@ -1,5 +1,8 @@
 package model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Api_Modelo {
     // Inicializar variables
     public String root = "";
@@ -7,7 +10,11 @@ public class Api_Modelo {
     String clave = "";
     public boolean conectado = false;
 
-
+    // ArrayList: lista que crece sola; aquí guardamos los objetos ya registrados
+    private final List<Carro_modelo> carros = new ArrayList<>();
+    private final List<chofer_modelo> choferes = new ArrayList<>();
+    private final List<Pasajero_modelo> pasajeros = new ArrayList<>();
+    private final List<Motor_modelo> motores = new ArrayList<>();
 
     // Constructor
     public Api_Modelo(String root, String url, String clave) {
@@ -30,83 +37,111 @@ public class Api_Modelo {
 
     // Regla de negocio de conexión a la base de datos
     public boolean validar_conexion() {
-        if (this.clave.equals("1234")) {
-            this.conectado = true;
-            return true;
-        } else {
-            this.conectado = false;
-            return false;
-        }
+        this.conectado = this.clave.equals("1234");
+        return this.conectado;
     }
-    
+
     //desconexión
     public boolean desconexion() {
         if (this.conectado) {
             this.conectado = false;
-            System.out.println("desconexion realizada...");
             return true;
-        } else {
-            System.out.println("No existe una conexión.");
-            return false;
+        }
+        return false;
+    }
+
+    private void exigirConexion() {
+        if (!this.conectado) {
+            throw new IllegalStateException("No existe una conexión activa con la API.");
         }
     }
 
-    //buscar chofer
-    public void buscar_chofer(String info_cedula) {
-        System.out.println("Cliente se esta buscando...");
+    //chofer
+    public boolean registrar_chofer(chofer_modelo chofer) {
+        exigirConexion();
+        return choferes.add(chofer); // .add() mete el objeto al final de la lista
     }
 
-    //buscar carro
-    public void buscar_carro(String placa_carro) {
-        System.out.println("Vehiculo se esta buscando...");
-    }
-    //buscar pasajero
-    public void buscar_pasajero(String info_cedula) {
-        System.out.println("Pasajero se esta buscando...");
-    }
-
-    //buscar motor
-    public void buscar_motor(String tipo_motor) {
-        System.out.println("Motor se esta buscando...");
+    public chofer_modelo buscar_chofer(String cedula) {
+        exigirConexion();
+        // recorre la lista uno por uno hasta encontrar la cédula (mismo patrón se repite abajo)
+        for (chofer_modelo chofer : choferes) {
+            if (chofer.getCedula_chofer().equals(cedula)) {
+                return chofer;
+            }
+        }
+        return null;
     }
 
-    //registrar chofer
-    public void registrar_chofer(String info_cedula) {
-        System.out.println("Cliente se esta registrando...");
+    public boolean eliminar_chofer(String cedula) {
+        exigirConexion();
+        chofer_modelo encontrado = buscar_chofer(cedula);
+        return encontrado != null && choferes.remove(encontrado);
     }
 
-    //ingresar carro
-    public void ingresar_carro(String placa_carro) {
-        System.out.println("Vehiculo se esta registrando...");
+    //carro
+    public boolean ingresar_carro(Carro_modelo carro) {
+        exigirConexion();
+        return carros.add(carro);
     }
 
-    //ingresar pasajero
-    public void ingresar_pasajero(String info_cedula) {
-        System.out.println("Pasajero se esta registrando...");
+    public Carro_modelo buscar_carro(String placa) {
+        exigirConexion();
+        for (Carro_modelo carro : carros) {
+            if (carro.getPlaca_carro().equals(placa)) {
+                return carro;
+            }
+        }
+        return null;
     }
 
-    //ingresar motor
-    public void ingresar_motor(String tipo_motor) {
-        System.out.println("Motor se esta registrando...");
+    public boolean eliminar_carro(String placa) {
+        exigirConexion();
+        Carro_modelo encontrado = buscar_carro(placa);
+        return encontrado != null && carros.remove(encontrado);
     }
 
-    //eliminar chofer
-    public void eliminar_chofer(String info_cedula) {
-        System.out.println("Cliente se esta eliminando...");
+    //pasajero
+    public boolean ingresar_pasajero(Pasajero_modelo pasajero) {
+        exigirConexion();
+        return pasajeros.add(pasajero);
     }
 
-    //eliminar carro
-    public void eliminar_carro(String placa_carro) {
-        System.out.println("Vehiculo se esta eliminando...");
+    public Pasajero_modelo buscar_pasajero(String cedula) {
+        exigirConexion();
+        for (Pasajero_modelo pasajero : pasajeros) {
+            if (pasajero.getCedula_pasajero().equals(cedula)) {
+                return pasajero;
+            }
+        }
+        return null;
     }
 
-    //eliminar pasajero
-    public void eliminar_pasajero(String info_cedula) {
-        System.out.println("Pasajero se esta eliminando...");
+    public boolean eliminar_pasajero(String cedula) {
+        exigirConexion();
+        Pasajero_modelo encontrado = buscar_pasajero(cedula);
+        return encontrado != null && pasajeros.remove(encontrado);
     }
 
-    //eliminar motor
-    public void eliminar_motor(String tipo_motor) {
-        System.out.println("Motor se esta eliminando...");
+    //motor
+    public boolean ingresar_motor(Motor_modelo motor) {
+        exigirConexion();
+        return motores.add(motor);
+    }
+
+    public Motor_modelo buscar_motor(String numeroSerie) {
+        exigirConexion();
+        for (Motor_modelo motor : motores) {
+            if (motor.getNumero_serie().equals(numeroSerie)) {
+                return motor;
+            }
+        }
+        return null;
+    }
+
+    public boolean eliminar_motor(String numeroSerie) {
+        exigirConexion();
+        Motor_modelo encontrado = buscar_motor(numeroSerie);
+        return encontrado != null && motores.remove(encontrado);
     }
 }

@@ -10,21 +10,49 @@ public class Tiendaparking {
     public static void main(String[] args) {
         Scanner teclado = new Scanner(System.in);
 
-        System.out.println("REGISTRO DE CHOFER");
         Chofer_vista vistaChofer = new Chofer_vista();
-        vistaChofer.registrar_chofer(teclado);
-
-        System.out.println("REGISTRO DE CARRO");
         Carro_vista vistaCarro = new Carro_vista();
-        vistaCarro.registrar_carro(teclado);
-
-        System.out.println("REGISTRO DE MOTOR");
         Motor_vista vistaMotor = new Motor_vista();
-        vistaMotor.registrar_motor(teclado);
-
-        System.out.println("REGISTRO DE PASAJERO");
         Pasajero_vista vistaPasajero = new Pasajero_vista();
-        vistaPasajero.registrar_pasajero(teclado);
+
+        int opcion = -1;
+        while (opcion != 0) {
+            System.out.println("\n===== MENÚ TIENDAPARKING =====");
+            System.out.println("1. Registrar chofer");
+            System.out.println("2. Registrar carro");
+            System.out.println("3. Registrar motor");
+            System.out.println("4. Registrar pasajero");
+            System.out.println("0. Salir");
+            System.out.print("Seleccione una opción: ");
+
+            String entrada = teclado.nextLine();
+            try {
+                opcion = Integer.parseInt(entrada.trim());
+            } catch (NumberFormatException e) {
+                System.out.println("  Opción inválida. Ingrese un número del 0 al 4.");
+                continue;
+            }
+
+            switch (opcion) {
+                case 1:
+                    vistaChofer.registrar_chofer(teclado);
+                    break;
+                case 2:
+                    vistaCarro.registrar_carro(teclado);
+                    break;
+                case 3:
+                    vistaMotor.registrar_motor(teclado);
+                    break;
+                case 4:
+                    vistaPasajero.registrar_pasajero(teclado);
+                    break;
+                case 0:
+                    System.out.println("Saliendo...");
+                    break;
+                default:
+                    System.out.println("  Opción inválida. Ingrese un número del 0 al 4.");
+            }
+        }
 
         teclado.close();
     }

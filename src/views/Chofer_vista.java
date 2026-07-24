@@ -1,12 +1,13 @@
 package views;
 
 import java.util.Scanner;
-import controller.Chofer_controlador;
+import controller.Controlador;
 import model.chofer_modelo;
 
 public class Chofer_vista {
 
     public void registrar_chofer(Scanner obj_teclado) {
+        System.out.println("REGISTRO DE CHOFER");
 
         String nombre_chofer = "";
         while (nombre_chofer.trim().isEmpty()) {
@@ -46,7 +47,7 @@ public class Chofer_vista {
             }
         }
 
-        Chofer_controlador obj_controller = new Chofer_controlador();
+        Controlador obj_controller = new Controlador();
         try {
             chofer_modelo obj_chofer = obj_controller.registrarChofer(nombre_chofer, apellido_chofer, cedula_chofer, licencia_chofer);
             System.out.println("Chofer registrado correctamente:\n"
@@ -54,7 +55,7 @@ public class Chofer_vista {
                     + "Apellido del chofer: " + obj_chofer.getApellido_chofer() + "\n"
                     + "Cédula del chofer: " + obj_chofer.getCedula_chofer() + "\n"
                     + "Licencia del chofer: " + obj_chofer.getLicencia_chofer());
-        } catch (IllegalArgumentException e) {
+        } catch (RuntimeException e) {
             System.out.println("Error de validación: " + e.getMessage());
         }
     }

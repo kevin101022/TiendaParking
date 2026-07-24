@@ -1,12 +1,13 @@
 package views;
 
 import java.util.Scanner;
-import controller.Motor_controlador;
+import controller.Controlador;
 import model.Motor_modelo;
 
 public class Motor_vista {
 
     public void registrar_motor(Scanner obj_teclado) {
+        System.out.println("REGISTRO DE MOTOR");
 
         String tipo_motor = "";
         while (tipo_motor.trim().isEmpty()) {
@@ -47,14 +48,14 @@ public class Motor_vista {
             }
         }
 
-        Motor_controlador obj_controller = new Motor_controlador();
+        Controlador obj_controller = new Controlador();
         try {
             Motor_modelo obj_motor = obj_controller.registrarMotor(tipo_motor, caballos_fuerza, numero_serie);
             System.out.println("Motor registrado correctamente:\n"
                     + "Tipo de motor: " + obj_motor.getTipo_motor() + "\n"
                     + "Caballos de fuerza: " + obj_motor.getCaballos_fuerza() + "\n"
                     + "Número de serie: " + obj_motor.getNumero_serie());
-        } catch (IllegalArgumentException e) {
+        } catch (RuntimeException e) {
             System.out.println("Error de validación: " + e.getMessage());
         }
     }
