@@ -4,11 +4,14 @@ import java.util.Scanner;
 import controller.Controlador;
 import model.Pasajero_modelo;
 
+// Vista para registrar un pasajero. Pre-valida por consola los mismos criterios
+// que aplica Pasajero_modelo; la validación definitiva sigue viviendo en el modelo.
 public class Pasajero_vista {
 
     public void registrar_pasajero(Scanner obj_teclado) {
         System.out.println("REGISTRO DE PASAJERO");
 
+        // Pide el nombre hasta que no venga vacío
         String nombre_pasajero = "";
         while (nombre_pasajero.trim().isEmpty()) {
             System.out.print("Ingrese el nombre del pasajero: ");
@@ -18,6 +21,7 @@ public class Pasajero_vista {
             }
         }
 
+        // Pide el apellido hasta que no venga vacío
         String apellido_pasajero = "";
         while (apellido_pasajero.trim().isEmpty()) {
             System.out.print("Ingrese el apellido del pasajero: ");
@@ -27,6 +31,7 @@ public class Pasajero_vista {
             }
         }
 
+        // Pide la cédula hasta que no esté vacía y sea solo números
         String cedula_pasajero = "";
         while (cedula_pasajero.trim().isEmpty() || !cedula_pasajero.trim().matches("\\d+")) {
             System.out.print("Ingrese la cédula del pasajero (solo números): ");
@@ -38,6 +43,8 @@ public class Pasajero_vista {
             }
         }
 
+        // Se delega el registro al controlador; el try/catch atrapa cualquier
+        // validación que igual falle en el modelo (última línea de defensa)
         Controlador obj_controller = new Controlador();
         try {
             Pasajero_modelo obj_pasajero = obj_controller.registrarPasajero(nombre_pasajero, apellido_pasajero, cedula_pasajero);
@@ -50,6 +57,7 @@ public class Pasajero_vista {
         }
     }
 
+    // Sobrecarga de conveniencia: crea su propio Scanner si no le pasan uno
     public void registrar_pasajero() {
         Scanner obj_teclado = new Scanner(System.in);
         registrar_pasajero(obj_teclado);
