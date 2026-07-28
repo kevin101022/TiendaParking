@@ -16,7 +16,7 @@ public class chofer_modelo {
         this.licencia_chofer = validarLicencia(dato_licencia);
     }
 
-    // holis, aqui estan las Reglas de negocio / Validaciones
+    // Reglas de negocio y validaciones
     public String validarNombre(String nombre) {
         if (nombre == null || nombre.trim().isEmpty()) {
             throw new IllegalArgumentException("El nombre del chofer no puede estar vacío.");

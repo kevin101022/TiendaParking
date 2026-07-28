@@ -13,7 +13,7 @@ public class Pasajero_modelo {
         this.cedula_pasajero = validarCedula(dato_cedula_pasajero);
     }
 
-    // holis aca van las Reglas de negocio / Validaciones
+    // Reglas de negocio y validaciones
     public String validarNombre(String nombre) {
         if (nombre == null || nombre.trim().isEmpty()) {
             throw new IllegalArgumentException("El nombre del pasajero no puede estar vacío.");

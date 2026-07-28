@@ -15,7 +15,7 @@ public class Carro_modelo {
         this.modelo_carro = validarModelo(dato_modelo);
     }
 
-    // holis, aqui estan las Reglas de negocio / Validaciones
+    // Reglas de negocio y validaciones
     public String validarPlaca(String placa) {
         if (placa == null || placa.trim().isEmpty()) {
             throw new IllegalArgumentException("La placa del carro no puede estar vacía.");

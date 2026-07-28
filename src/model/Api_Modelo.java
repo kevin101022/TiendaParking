@@ -3,17 +3,15 @@ package model;
 import java.util.ArrayList;
 import java.util.List;
 
-// Esta clase simula la "base de datos" del sistema: guarda en memoria todo lo
-// que se va registrando (carros, choferes, pasajeros, motores) y controla el
-// acceso mediante una conexión simulada.
+// Simula la "base de datos" del sistema en memoria
 public class Api_Modelo {
     //Inicializar variables
     public String root = "";
     String url = "";
     String clave = "";
-    public boolean conectado = false; // true = hay "sesión abierta" con la API, false = no se puede operar
+    public boolean conectado = false; // Estado de conexión
 
-    // ArrayList: lista que crece sola; aquí guardamos los objetos ya registrados
+    // Listas dinámicas de registros
     private final List<Carro_modelo> carros = new ArrayList<>();
     private final List<chofer_modelo> choferes = new ArrayList<>();
     private final List<Pasajero_modelo> pasajeros = new ArrayList<>();
@@ -38,14 +36,13 @@ public class Api_Modelo {
     void setClave(String clave) { this.clave = clave; }
     void setConectado(boolean conectado) { this.conectado = conectado; }
 
-    // Regla de negocio de conexión a la base de datos
-    // Solo se considera "conectado" si la clave guardada es exactamente "1234".
+    // Validar conexión a BD simulada
     public boolean validar_conexion() {
         this.conectado = this.clave.equals("1234");
         return this.conectado;
     }
 
-    //desconexión: cierra la sesión si estaba abierta, si no hace nada
+    // Cierra sesión abierta
     public boolean desconexion() {
         if (this.conectado) {
             this.conectado = false;
@@ -54,8 +51,7 @@ public class Api_Modelo {
         return false;
     }
 
-    // Regla de negocio: nada de lo que hay abajo (registrar/buscar/eliminar)
-    // puede ejecutarse sin conexión activa. Se llama al inicio de cada método.
+    // Requiere conexión para operar
     private void exigirConexion() {
         if (!this.conectado) {
             throw new IllegalStateException("No existe una conexión activa con la API.");
@@ -63,14 +59,13 @@ public class Api_Modelo {
     }
 
     //chofer
-    // Registra un chofer ya validado (las validaciones las hizo chofer_modelo en su constructor).
+    // Registrar chofer
     public boolean registrar_chofer(chofer_modelo chofer) {
         exigirConexion();
-        return choferes.add(chofer); // .add() mete el objeto al final de la lista
+        return choferes.add(chofer);
     }
 
-    // Búsqueda por cédula: recorre la lista uno por uno hasta encontrar la cédula
-    // (mismo patrón de búsqueda lineal se repite en carro, pasajero y motor)
+    // Búsqueda por cédula
     public chofer_modelo buscar_chofer(String cedula) {
         exigirConexion();
         for (chofer_modelo chofer : choferes) {
@@ -81,7 +76,7 @@ public class Api_Modelo {
         return null;
     }
 
-    // Busca primero y, si existe, lo quita de la lista
+    // Eliminar por cédula
     public boolean eliminar_chofer(String cedula) {
         exigirConexion();
         chofer_modelo encontrado = buscar_chofer(cedula);

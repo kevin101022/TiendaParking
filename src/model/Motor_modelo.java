@@ -13,7 +13,7 @@ public class Motor_modelo {
         this.numero_serie = validarNumeroSerie(dato_numero_serie);
     }
 
-    // holis, aqui estan las Reglas de negocio / Validaciones
+    // Reglas de negocio y validaciones
     public String validarTipoMotor(String tipo) {
         if (tipo == null || tipo.trim().isEmpty()) {
             throw new IllegalArgumentException("El tipo de motor no puede estar vacío.");

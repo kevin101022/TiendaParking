@@ -2,12 +2,9 @@ package views;
 
 import java.util.Scanner;
 
-// Vista del menú principal. Solo se encarga de mostrar opciones y leer lo que
-// escribe el usuario; no conoce modelos ni controlador (eso lo maneja el main).
 public class Menu_vista {
 
-    // Imprime el menú y devuelve la opción elegida como número.
-    // Si el usuario escribe algo que no es un número, devuelve -1 (opción inválida).
+    // Muestra menú y lee opción
     public int mostrarMenu(Scanner obj_teclado) {
         System.out.println("\n===== MENÚ TIENDAPARKING =====");
         System.out.println("1. Registrar chofer");
@@ -25,12 +22,12 @@ public class Menu_vista {
         }
     }
 
-    // Mensaje cuando la opción no está entre 0 y 4
+    // Opción fuera de rango
     public void mostrarOpcionInvalida() {
         System.out.println("  Opción inválida. Ingrese un número del 0 al 4.");
     }
 
-    // Mensaje de despedida cuando se elige la opción 0
+    // Salida
     public void mostrarSalida() {
         System.out.println("Saliendo...");
     }

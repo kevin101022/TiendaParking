@@ -4,15 +4,13 @@ import java.util.Scanner;
 import controller.Controlador;
 import model.Motor_modelo;
 
-// Vista para registrar un motor. Pre-valida por consola los mismos criterios
-// que aplica Motor_modelo (incluyendo que los caballos de fuerza sean un
-// número mayor a 0); la validación definitiva sigue viviendo en el modelo.
+// Vista para registrar un motor. Pre-valida entrada por consola.
 public class Motor_vista {
 
-    public void registrar_motor(Scanner obj_teclado) {
+    public void registrar_motor(Scanner obj_teclado, Controlador obj_controller) {
         System.out.println("REGISTRO DE MOTOR");
 
-        // Pide el tipo hasta que no venga vacío
+        // Pedir tipo
         String tipo_motor = "";
         while (tipo_motor.trim().isEmpty()) {
             System.out.print("Ingrese el tipo de motor: ");
@@ -22,8 +20,7 @@ public class Motor_vista {
             }
         }
 
-        // Pide los caballos de fuerza: debe ser numérico y mayor a 0
-        // (misma regla que Motor_modelo.validarCaballosFuerza)
+        // Pedir y validar caballos de fuerza (> 0)
         String caballos_fuerza = "";
         boolean caballosValidos = false;
         while (!caballosValidos) {
@@ -45,7 +42,7 @@ public class Motor_vista {
             }
         }
 
-        // Pide el número de serie hasta que no venga vacío
+        // Pedir número de serie
         String numero_serie = "";
         while (numero_serie.trim().isEmpty()) {
             System.out.print("Ingrese el número de serie del motor: ");
@@ -55,9 +52,6 @@ public class Motor_vista {
             }
         }
 
-        // Se delega el registro al controlador; el try/catch atrapa cualquier
-        // validación que igual falle en el modelo (última línea de defensa)
-        Controlador obj_controller = new Controlador();
         try {
             Motor_modelo obj_motor = obj_controller.registrarMotor(tipo_motor, caballos_fuerza, numero_serie);
             System.out.println("Motor registrado correctamente:\n"
@@ -67,11 +61,5 @@ public class Motor_vista {
         } catch (RuntimeException e) {
             System.out.println("Error de validación: " + e.getMessage());
         }
-    }
-
-    // Sobrecarga de conveniencia: crea su propio Scanner si no le pasan uno
-    public void registrar_motor() {
-        Scanner obj_teclado = new Scanner(System.in);
-        registrar_motor(obj_teclado);
     }
 }
