@@ -3,19 +3,20 @@ package model;
 import java.util.ArrayList;
 import java.util.List;
 
-// Simula la "base de datos" del sistema en memoria
 public class Api_Modelo {
     //Inicializar variables
     public String root = "";
     String url = "";
     String clave = "";
-    public boolean conectado = false; // Estado de conexión
+    public boolean conectado = false; 
 
-    // Listas dinámicas de registros
-    private final List<Carro_modelo> carros = new ArrayList<>();
+    // Estructuras dinámicas (ArrayList)
     private final List<chofer_modelo> choferes = new ArrayList<>();
     private final List<Pasajero_modelo> pasajeros = new ArrayList<>();
-    private final List<Motor_modelo> motores = new ArrayList<>();
+
+    // Estructuras estáticas (Matrices 3x3)
+    private final Carro_modelo[][] carros = new Carro_modelo[3][3];
+    private final Motor_modelo[][] motores = new Motor_modelo[3][3];
 
     //Constructor
     public Api_Modelo(String root, String url, String clave) {
@@ -65,10 +66,11 @@ public class Api_Modelo {
         return choferes.add(chofer);
     }
 
-    // Búsqueda por cédula
+    // Búsqueda por cédula 
     public chofer_modelo buscar_chofer(String cedula) {
         exigirConexion();
-        for (chofer_modelo chofer : choferes) {
+        for (int i = 0; i < choferes.size(); i++) {
+            chofer_modelo chofer = choferes.get(i);
             if (chofer.getCedula_chofer().equals(cedula)) {
                 return chofer;
             }
@@ -79,22 +81,38 @@ public class Api_Modelo {
     // Eliminar por cédula
     public boolean eliminar_chofer(String cedula) {
         exigirConexion();
-        chofer_modelo encontrado = buscar_chofer(cedula);
-        return encontrado != null && choferes.remove(encontrado);
+        for (int i = 0; i < choferes.size(); i++) {
+            if (choferes.get(i).getCedula_chofer().equals(cedula)) {
+                choferes.remove(i);
+                return true;
+            }
+        }
+        return false;
     }
 
     //carro
     public boolean ingresar_carro(Carro_modelo carro) {
         exigirConexion();
-        return carros.add(carro);
+        // Recorrido de matriz para insertar en el primer espacio vacío
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                if (carros[i][j] == null) {
+                    carros[i][j] = carro;
+                    return true;
+                }
+            }
+        }
+        return false; // Si la matriz 3x3 está llena
     }
 
     // Búsqueda por placa
     public Carro_modelo buscar_carro(String placa) {
         exigirConexion();
-        for (Carro_modelo carro : carros) {
-            if (carro.getPlaca_carro().equals(placa)) {
-                return carro;
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                if (carros[i][j] != null && carros[i][j].getPlaca_carro().equals(placa)) {
+                    return carros[i][j];
+                }
             }
         }
         return null;
@@ -102,8 +120,15 @@ public class Api_Modelo {
 
     public boolean eliminar_carro(String placa) {
         exigirConexion();
-        Carro_modelo encontrado = buscar_carro(placa);
-        return encontrado != null && carros.remove(encontrado);
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                if (carros[i][j] != null && carros[i][j].getPlaca_carro().equals(placa)) {
+                    carros[i][j] = null; // Se elimina vaciando la posición
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     //pasajero
@@ -112,10 +137,11 @@ public class Api_Modelo {
         return pasajeros.add(pasajero);
     }
 
-    // Búsqueda por cédula
+    // Búsqueda por cédula  
     public Pasajero_modelo buscar_pasajero(String cedula) {
         exigirConexion();
-        for (Pasajero_modelo pasajero : pasajeros) {
+        for (int i = 0; i < pasajeros.size(); i++) {
+            Pasajero_modelo pasajero = pasajeros.get(i);
             if (pasajero.getCedula_pasajero().equals(cedula)) {
                 return pasajero;
             }
@@ -125,22 +151,38 @@ public class Api_Modelo {
 
     public boolean eliminar_pasajero(String cedula) {
         exigirConexion();
-        Pasajero_modelo encontrado = buscar_pasajero(cedula);
-        return encontrado != null && pasajeros.remove(encontrado);
+        for (int i = 0; i < pasajeros.size(); i++) {
+            if (pasajeros.get(i).getCedula_pasajero().equals(cedula)) {
+                pasajeros.remove(i);
+                return true;
+            }
+        }
+        return false;
     }
 
     //motor
     public boolean ingresar_motor(Motor_modelo motor) {
         exigirConexion();
-        return motores.add(motor);
+        // Recorrido de matriz para insertar en el primer espacio vacío
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                if (motores[i][j] == null) {
+                    motores[i][j] = motor;
+                    return true;
+                }
+            }
+        }
+        return false; // Si la matriz está llena
     }
 
     // Búsqueda por número de serie
     public Motor_modelo buscar_motor(String numeroSerie) {
         exigirConexion();
-        for (Motor_modelo motor : motores) {
-            if (motor.getNumero_serie().equals(numeroSerie)) {
-                return motor;
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                if (motores[i][j] != null && motores[i][j].getNumero_serie().equals(numeroSerie)) {
+                    return motores[i][j];
+                }
             }
         }
         return null;
@@ -148,7 +190,14 @@ public class Api_Modelo {
 
     public boolean eliminar_motor(String numeroSerie) {
         exigirConexion();
-        Motor_modelo encontrado = buscar_motor(numeroSerie);
-        return encontrado != null && motores.remove(encontrado);
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                if (motores[i][j] != null && motores[i][j].getNumero_serie().equals(numeroSerie)) {
+                    motores[i][j] = null; // Eliminar dejando nulo
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }
