@@ -42,23 +42,12 @@ public class Carro_vista {
             }
         }
 
-        // Pedir modelo
-        String modelo_carro = "";
-        while (modelo_carro.trim().isEmpty()) {
-            System.out.print("Ingrese el modelo del carro: ");
-            modelo_carro = obj_teclado.nextLine();
-            if (modelo_carro.trim().isEmpty()) {
-                System.out.println("  El modelo no puede estar vacío. Intente de nuevo.");
-            }
-        }
-
         try {
-            Carro_modelo obj_carro = obj_controller.registrarCarro(placa_carro, color_carro, marca_carro, modelo_carro);
+            Carro_modelo obj_carro = obj_controller.registrarCarro(placa_carro, color_carro, marca_carro);
             System.out.println("Carro registrado correctamente:\n"
                     + "Placa del carro: " + obj_carro.getPlaca_carro() + "\n"
                     + "Color del carro: " + obj_carro.getColor_carro() + "\n"
-                    + "Marca del carro: " + obj_carro.getMarca_carro() + "\n"
-                    + "Modelo del carro: " + obj_carro.getModelo_carro());
+                    + "Marca del carro: " + obj_carro.getMarca_carro());
         } catch (RuntimeException e) {
             System.out.println("Error de validación: " + e.getMessage());
         }

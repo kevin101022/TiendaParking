@@ -61,15 +61,15 @@ public class Controlador {
     }
 
     //carro
-    public Carro_modelo registrarCarro(String placa, String color, String marca, String modelo){
-        Carro_modelo obj_carro = new Carro_modelo(placa, color, marca, modelo); // Se valida al instanciar
+    public Carro_modelo registrarCarro(String placa, String color, String marca){
+        Carro_modelo obj_carro = new Carro_modelo(placa, color, marca); // Se valida al instanciar
         api.ingresar_carro(obj_carro);
         return obj_carro;
     }
 
     // Sobrecarga: usa color por defecto
-    public Carro_modelo registrarCarro(String placa, String marca, String modelo){
-        return registrarCarro(placa, "No especificado", marca, modelo);
+    public Carro_modelo registrarCarro(String placa, String marca){
+        return registrarCarro(placa, "No especificado", marca);
     }
 
     //chofer

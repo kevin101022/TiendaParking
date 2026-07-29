@@ -4,38 +4,38 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Api_Modelo {
-    //Inicializar variables
+    // Inicializar variables
     public String root = "";
-    String url = "";
-    String clave = "";
-    public boolean conectado = false; 
+    public String url = "";
+    public String clave = "";
+    public boolean conectado = false;
 
-    // Estructuras dinámicas (ArrayList)
-    private final List<chofer_modelo> choferes = new ArrayList<>();
-    private final List<Pasajero_modelo> pasajeros = new ArrayList<>();
+    // Estructuras dinámicas (ArrayList) 
+    private final List<chofer_modelo> lista_chofer = new ArrayList<>();
+    private final List<Pasajero_modelo> lista_pasajero = new ArrayList<>();
 
-    // Estructuras estáticas (Matrices 3x3)
-    private final Carro_modelo[][] carros = new Carro_modelo[3][3];
-    private final Motor_modelo[][] motores = new Motor_modelo[3][3];
+    // Estructuras estáticas (Matrices 3x3) 
+    private final String[][] lista_carros = new String[3][3];
+    private final String[][] lista_motores = new String[3][3];
 
-    //Constructor
-    public Api_Modelo(String root, String url, String clave) {
-        this.root = root;
+    // Constructor
+    public Api_Modelo(String url, String usuario, String clave) {
         this.url = url;
+        this.root = usuario;
         this.clave = clave;
     }
 
-    //Getters
+    // Getters públicos
     public String getRoot() { return root; }
-    String getUrl() { return url; }
-    String getClave() { return clave; }
-    boolean isConectado() { return conectado; }
+    public String getUrl() { return url; }
+    public String getClave() { return clave; }
+    public boolean isConectado() { return conectado; }
 
-    //Setters
+    // Setters públicos
     public void setRoot(String root) { this.root = root; }
-    void setUrl(String url) { this.url = url; }
-    void setClave(String clave) { this.clave = clave; }
-    void setConectado(boolean conectado) { this.conectado = conectado; }
+    public void setUrl(String url) { this.url = url; }
+    public void setClave(String clave) { this.clave = clave; }
+    public void setConectado(boolean conectado) { this.conectado = conectado; }
 
     // Validar conexión a BD simulada
     public boolean validar_conexion() {
@@ -59,18 +59,17 @@ public class Api_Modelo {
         }
     }
 
-    //chofer
-    // Registrar chofer
+  
+
     public boolean registrar_chofer(chofer_modelo chofer) {
         exigirConexion();
-        return choferes.add(chofer);
+        return lista_chofer.add(chofer);
     }
 
-    // Búsqueda por cédula 
     public chofer_modelo buscar_chofer(String cedula) {
         exigirConexion();
-        for (int i = 0; i < choferes.size(); i++) {
-            chofer_modelo chofer = choferes.get(i);
+        for (int i = 0; i < lista_chofer.size(); i++) {
+            chofer_modelo chofer = lista_chofer.get(i);
             if (chofer.getCedula_chofer().equals(cedula)) {
                 return chofer;
             }
@@ -78,70 +77,93 @@ public class Api_Modelo {
         return null;
     }
 
-    // Eliminar por cédula
-    public boolean eliminar_chofer(String cedula) {
+    public boolean actualizar_chofer(String cedulaVieja, chofer_modelo nuevoChofer) {
         exigirConexion();
-        for (int i = 0; i < choferes.size(); i++) {
-            if (choferes.get(i).getCedula_chofer().equals(cedula)) {
-                choferes.remove(i);
+        for (int i = 0; i < lista_chofer.size(); i++) {
+            if (lista_chofer.get(i).getCedula_chofer().equals(cedulaVieja)) {
+                lista_chofer.set(i, nuevoChofer);
                 return true;
             }
         }
         return false;
     }
 
-    //carro
-    public boolean ingresar_carro(Carro_modelo carro) {
+    public boolean eliminar_chofer(String cedula) {
         exigirConexion();
-        // Recorrido de matriz para insertar en el primer espacio vacío
-        for (int i = 0; i < 3; i++) {
-            for (int j = 0; j < 3; j++) {
-                if (carros[i][j] == null) {
-                    carros[i][j] = carro;
-                    return true;
-                }
-            }
-        }
-        return false; // Si la matriz 3x3 está llena
-    }
-
-    // Búsqueda por placa
-    public Carro_modelo buscar_carro(String placa) {
-        exigirConexion();
-        for (int i = 0; i < 3; i++) {
-            for (int j = 0; j < 3; j++) {
-                if (carros[i][j] != null && carros[i][j].getPlaca_carro().equals(placa)) {
-                    return carros[i][j];
-                }
-            }
-        }
-        return null;
-    }
-
-    public boolean eliminar_carro(String placa) {
-        exigirConexion();
-        for (int i = 0; i < 3; i++) {
-            for (int j = 0; j < 3; j++) {
-                if (carros[i][j] != null && carros[i][j].getPlaca_carro().equals(placa)) {
-                    carros[i][j] = null; // Se elimina vaciando la posición
-                    return true;
-                }
+        for (int i = 0; i < lista_chofer.size(); i++) {
+            if (lista_chofer.get(i).getCedula_chofer().equals(cedula)) {
+                lista_chofer.remove(i);
+                return true;
             }
         }
         return false;
     }
 
-    //pasajero
-    public boolean ingresar_pasajero(Pasajero_modelo pasajero) {
+  
+
+    public boolean ingresar_carro(Carro_modelo carro) {
         exigirConexion();
-        return pasajeros.add(pasajero);
+        // Insertar en la matriz desarmando el objeto en 3 columnas
+        for (int i = 0; i < 3; i++) {
+            if (lista_carros[i][0] == null) { // Si la fila está libre
+                lista_carros[i][0] = carro.getPlaca_carro();
+                lista_carros[i][1] = carro.getMarca_carro();
+                lista_carros[i][2] = carro.getColor_carro();
+                return true;
+            }
+        }
+        return false; // Matriz llena
     }
 
-    // Búsqueda por cédula  
+    public Carro_modelo buscar_carro(String placa) {
+        exigirConexion();
+        for (int i = 0; i < 3; i++) {
+            if (lista_carros[i][0] != null && lista_carros[i][0].equals(placa)) {
+                // Reconstruimos el objeto para devolvérselo al controlador
+                return new Carro_modelo(lista_carros[i][0], lista_carros[i][2], lista_carros[i][1]); // Placa, Color, Marca
+            }
+        }
+        return null;
+    }
+
+    public boolean actualizar_carro(String placaVieja, Carro_modelo nuevoCarro) {
+        exigirConexion();
+        for (int i = 0; i < 3; i++) {
+            if (lista_carros[i][0] != null && lista_carros[i][0].equals(placaVieja)) {
+                lista_carros[i][0] = nuevoCarro.getPlaca_carro();
+                lista_carros[i][1] = nuevoCarro.getMarca_carro();
+                lista_carros[i][2] = nuevoCarro.getColor_carro();
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean eliminar_carro(String placa) {
+        exigirConexion();
+        for (int i = 0; i < 3; i++) {
+            if (lista_carros[i][0] != null && lista_carros[i][0].equals(placa)) {
+                // Para eliminar, vaciamos las 3 columnas
+                lista_carros[i][0] = null;
+                lista_carros[i][1] = null;
+                lista_carros[i][2] = null;
+                return true;
+            }
+        }
+        return false;
+    }
+
+  
+
+    public boolean ingresar_pasajero(Pasajero_modelo pasajero) {
+        exigirConexion();
+        return lista_pasajero.add(pasajero);
+    }
+
     public Pasajero_modelo buscar_pasajero(String cedula) {
         exigirConexion();
-        for (int i = 0; i < pasajeros.size(); i++) {
-            Pasajero_modelo pasajero = pasajeros.get(i);
+        for (int i = 0; i < lista_pasajero.size(); i++) {
+            Pasajero_modelo pasajero = lista_pasajero.get(i);
             if (pasajero.getCedula_pasajero().equals(cedula)) {
                 return pasajero;
             }
@@ -149,53 +171,74 @@ public class Api_Modelo {
         return null;
     }
 
-    public boolean eliminar_pasajero(String cedula) {
+    public boolean actualizar_pasajero(String cedulaVieja, Pasajero_modelo nuevoPasajero) {
         exigirConexion();
-        for (int i = 0; i < pasajeros.size(); i++) {
-            if (pasajeros.get(i).getCedula_pasajero().equals(cedula)) {
-                pasajeros.remove(i);
+        for (int i = 0; i < lista_pasajero.size(); i++) {
+            if (lista_pasajero.get(i).getCedula_pasajero().equals(cedulaVieja)) {
+                lista_pasajero.set(i, nuevoPasajero);
                 return true;
             }
         }
         return false;
     }
 
-    //motor
-    public boolean ingresar_motor(Motor_modelo motor) {
+    public boolean eliminar_pasajero(String cedula) {
         exigirConexion();
-        // Recorrido de matriz para insertar en el primer espacio vacío
-        for (int i = 0; i < 3; i++) {
-            for (int j = 0; j < 3; j++) {
-                if (motores[i][j] == null) {
-                    motores[i][j] = motor;
-                    return true;
-                }
+        for (int i = 0; i < lista_pasajero.size(); i++) {
+            if (lista_pasajero.get(i).getCedula_pasajero().equals(cedula)) {
+                lista_pasajero.remove(i);
+                return true;
             }
         }
-        return false; // Si la matriz está llena
+        return false;
     }
 
-    // Búsqueda por número de serie
+
+    public boolean ingresar_motor(Motor_modelo motor) {
+        exigirConexion();
+        for (int i = 0; i < 3; i++) {
+            if (lista_motores[i][0] == null) {
+                lista_motores[i][0] = motor.getNumero_serie();
+                lista_motores[i][1] = motor.getTipo_motor();
+                lista_motores[i][2] = motor.getCaballos_fuerza();
+                return true;
+            }
+        }
+        return false;
+    }
+
     public Motor_modelo buscar_motor(String numeroSerie) {
         exigirConexion();
         for (int i = 0; i < 3; i++) {
-            for (int j = 0; j < 3; j++) {
-                if (motores[i][j] != null && motores[i][j].getNumero_serie().equals(numeroSerie)) {
-                    return motores[i][j];
-                }
+            if (lista_motores[i][0] != null && lista_motores[i][0].equals(numeroSerie)) {
+                // Reconstruimos el objeto 
+                return new Motor_modelo(lista_motores[i][1], lista_motores[i][2], lista_motores[i][0]); // Tipo, Caballos, Serie
             }
         }
         return null;
     }
 
+    public boolean actualizar_motor(String serieVieja, Motor_modelo nuevoMotor) {
+        exigirConexion();
+        for (int i = 0; i < 3; i++) {
+            if (lista_motores[i][0] != null && lista_motores[i][0].equals(serieVieja)) {
+                lista_motores[i][0] = nuevoMotor.getNumero_serie();
+                lista_motores[i][1] = nuevoMotor.getTipo_motor();
+                lista_motores[i][2] = nuevoMotor.getCaballos_fuerza();
+                return true;
+            }
+        }
+        return false;
+    }
+
     public boolean eliminar_motor(String numeroSerie) {
         exigirConexion();
         for (int i = 0; i < 3; i++) {
-            for (int j = 0; j < 3; j++) {
-                if (motores[i][j] != null && motores[i][j].getNumero_serie().equals(numeroSerie)) {
-                    motores[i][j] = null; // Eliminar dejando nulo
-                    return true;
-                }
+            if (lista_motores[i][0] != null && lista_motores[i][0].equals(numeroSerie)) {
+                lista_motores[i][0] = null;
+                lista_motores[i][1] = null;
+                lista_motores[i][2] = null;
+                return true;
             }
         }
         return false;
