@@ -10,6 +10,7 @@ import views.Chofer_vista;
 import views.Menu_vista;
 import views.Motor_vista;
 import views.Pasajero_vista;
+import views.Viaje_vista;
 import java.util.Scanner;
 
 // Puente entre las vistas y los modelos. Solo arma y envía el objeto para guardarlo.
@@ -21,11 +22,9 @@ public class Controlador {
         api.validar_conexion();
     }
 
-    // Estructuras temporales para armar la Ficha de Viaje antes de guardarla
-    private chofer_modelo tempChofer = null;
-    private Carro_modelo tempCarro = null;
-    private Motor_modelo tempMotor = null;
-    private Pasajero_modelo tempPasajero = null;
+    // Estructura temporal externa: array para armar la Ficha de Viaje antes de guardarla
+    // Índices: 0=Carro, 1=Motor, 2=Chofer, 3=Pasajero
+    private Object[] fichaTemporal = new Object[4];
 
     // Punto de entrada del flujo (Controlador coordina las vistas)
     @SuppressWarnings("resource")
@@ -38,6 +37,7 @@ public class Controlador {
         Carro_vista vistaCarro = new Carro_vista();
         Motor_vista vistaMotor = new Motor_vista();
         Pasajero_vista vistaPasajero = new Pasajero_vista();
+        Viaje_vista vistaViaje = new Viaje_vista();
 
         int opcion = -1;
         while (opcion != 0) {
@@ -57,7 +57,7 @@ public class Controlador {
                     vistaPasajero.registrar_pasajero(teclado, this);
                     break;
                 case 5:
-                    confirmarViaje(teclado);
+                    confirmarViaje(teclado, vistaViaje);
                     break;
                 case 0:
                     vistaMenu.mostrarSalida();
@@ -70,78 +70,70 @@ public class Controlador {
     }
 
     // Método para validar que todo esté listo y enviarlo al API
-    public void confirmarViaje(Scanner teclado) {
-        System.out.println("\n--- VALIDANDO FICHA DE VIAJE ---");
+    public void confirmarViaje(Scanner teclado, Viaje_vista vistaViaje) {
+        vistaViaje.mostrarValidando();
         boolean completo = true;
         boolean hayAlgo = false;
 
-        if (tempChofer == null) {
-            System.out.println("- ERROR: Falta registrar el Chofer.");
+        // Validaciones: Carro(0), Motor(1), Chofer(2), Pasajero(3)
+        if (fichaTemporal[0] == null) {
+            vistaViaje.mostrarErrorFaltaDato("Carro");
             completo = false;
         } else { hayAlgo = true; }
         
-        if (tempCarro == null) {
-            System.out.println("- ERROR: Falta registrar el Carro.");
+        if (fichaTemporal[1] == null) {
+            vistaViaje.mostrarErrorFaltaDato("Motor");
             completo = false;
         } else { hayAlgo = true; }
         
-        if (tempMotor == null) {
-            System.out.println("- ERROR: Falta registrar el Motor.");
+        if (fichaTemporal[2] == null) {
+            vistaViaje.mostrarErrorFaltaDato("Chofer");
             completo = false;
         } else { hayAlgo = true; }
         
-        if (tempPasajero == null) {
-            System.out.println("- ERROR: Falta registrar el Pasajero.");
+        if (fichaTemporal[3] == null) {
+            vistaViaje.mostrarErrorFaltaDato("Pasajero");
             completo = false;
         } else { hayAlgo = true; }
 
         if (!hayAlgo) {
-            System.out.println("\n[!] No hay ningún registro temporal para guardar.");
+            vistaViaje.mostrarErrorVacio();
             return;
         }
 
         if (completo) {
             // Todos los datos están, procedemos a guardarlos en la BD (API)
-            api.registrar_chofer(tempChofer);
-            api.ingresar_carro(tempCarro);
-            api.ingresar_motor(tempMotor);
-            api.ingresar_pasajero(tempPasajero);
+            api.ingresar_carro((Carro_modelo) fichaTemporal[0]);
+            api.ingresar_motor((Motor_modelo) fichaTemporal[1]);
+            api.registrar_chofer((chofer_modelo) fichaTemporal[2]);
+            api.ingresar_pasajero((Pasajero_modelo) fichaTemporal[3]);
 
-            System.out.println("\n¡ÉXITO! La ficha de viaje ha sido guardada en la base de datos central.");
-            System.out.println("Los registros temporales se han limpiado. Puede registrar un nuevo viaje.");
+            vistaViaje.mostrarExitoGuardado();
 
             // Limpiamos la memoria para un nuevo registro
-            tempChofer = null;
-            tempCarro = null;
-            tempMotor = null;
-            tempPasajero = null;
+            fichaTemporal = new Object[4];
         } else {
-            System.out.println("\n[!] Advertencia: La Ficha de Viaje no cumple con los requisitos completos.");
-            System.out.print("¿Desea forzar el guardado individual de los datos que SÍ registró? (S/N): ");
-            String respuesta = teclado.nextLine();
+            boolean forzar = vistaViaje.preguntarForzarGuardado(teclado);
             
-            if (respuesta.trim().equalsIgnoreCase("S")) {
-                if (tempChofer != null) api.registrar_chofer(tempChofer);
-                if (tempCarro != null) api.ingresar_carro(tempCarro);
-                if (tempMotor != null) api.ingresar_motor(tempMotor);
-                if (tempPasajero != null) api.ingresar_pasajero(tempPasajero);
+            if (forzar) {
+                if (fichaTemporal[0] != null) api.ingresar_carro((Carro_modelo) fichaTemporal[0]);
+                if (fichaTemporal[1] != null) api.ingresar_motor((Motor_modelo) fichaTemporal[1]);
+                if (fichaTemporal[2] != null) api.registrar_chofer((chofer_modelo) fichaTemporal[2]);
+                if (fichaTemporal[3] != null) api.ingresar_pasajero((Pasajero_modelo) fichaTemporal[3]);
                 
-                System.out.println("Registros individuales guardados en la BD exitosamente.");
+                vistaViaje.mostrarGuardadoIndividualExito();
                 
-                tempChofer = null;
-                tempCarro = null;
-                tempMotor = null;
-                tempPasajero = null;
+                fichaTemporal = new Object[4];
             } else {
-                System.out.println("Guardado cancelado. Complete los datos faltantes e intente guardar de nuevo (Opción 5).");
+                vistaViaje.mostrarGuardadoCancelado();
             }
         }
     }
 
-    //carro
+    //carro (índice 0)
     public Carro_modelo registrarCarro(String placa, String marca, String modelo){
-        Carro_modelo obj_carro = new Carro_modelo(placa, marca, modelo); // Se valida al instanciar
-        this.tempCarro = obj_carro; // Guardado temporal
+        Carro_modelo obj_carro = new Carro_modelo(placa, marca, modelo); 
+        this.fichaTemporal[0] = obj_carro; 
         return obj_carro;
     }
 
@@ -150,17 +142,17 @@ public class Controlador {
         return registrarCarro(placa, marca, "No especificado");
     }
 
-    //chofer
+    //chofer (índice 2)
     public chofer_modelo registrarChofer(String nombre, String apellido, String cedula, String licencia){
-        chofer_modelo obj_chofer = new chofer_modelo(nombre, apellido, cedula, licencia); // Se valida al instanciar
-        this.tempChofer = obj_chofer; // Guardado temporal
+        chofer_modelo obj_chofer = new chofer_modelo(nombre, apellido, cedula, licencia); 
+        this.fichaTemporal[2] = obj_chofer; 
         return obj_chofer;
     }
 
-    //motor
+    //motor (índice 1)
     public Motor_modelo registrarMotor(String tipo, String caballosFuerza, String numeroSerie){
-        Motor_modelo obj_motor = new Motor_modelo(tipo, caballosFuerza, numeroSerie); // Se valida al instanciar
-        this.tempMotor = obj_motor; // Guardado temporal
+        Motor_modelo obj_motor = new Motor_modelo(tipo, caballosFuerza, numeroSerie); 
+        this.fichaTemporal[1] = obj_motor; 
         return obj_motor;
     }
 
@@ -169,10 +161,10 @@ public class Controlador {
         return registrarMotor(tipo, "100", serie);
     }
 
-    //pasajero
+    //pasajero (índice 3)
     public Pasajero_modelo registrarPasajero(String nombre, String apellido, String cedula){
-        Pasajero_modelo obj_pasajero = new Pasajero_modelo(nombre, apellido, cedula); // Se valida al instanciar
-        this.tempPasajero = obj_pasajero; // Guardado temporal
+        Pasajero_modelo obj_pasajero = new Pasajero_modelo(nombre, apellido, cedula); 
+        this.fichaTemporal[3] = obj_pasajero; 
         return obj_pasajero;
     }
 }

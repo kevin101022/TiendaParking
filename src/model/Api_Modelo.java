@@ -14,7 +14,7 @@ public class Api_Modelo {
     private final List<chofer_modelo> lista_chofer = new ArrayList<>();
     private final List<Pasajero_modelo> lista_pasajero = new ArrayList<>();
 
-    // Estructuras estáticas (Matrices 3x3) 
+    // Estructuras estáticas (Matrices 3x3 para strings)
     private final String[][] lista_carros = new String[3][3];
     private final String[][] lista_motores = new String[3][3];
 
@@ -59,8 +59,9 @@ public class Api_Modelo {
         }
     }
 
-  
-
+    // ==========================================
+    // CRUD CHOFER (Dinámico - Sin foreach)
+    // ==========================================
     public boolean registrar_chofer(chofer_modelo chofer) {
         exigirConexion();
         return lista_chofer.add(chofer);
@@ -69,9 +70,8 @@ public class Api_Modelo {
     public chofer_modelo buscar_chofer(String cedula) {
         exigirConexion();
         for (int i = 0; i < lista_chofer.size(); i++) {
-            chofer_modelo chofer = lista_chofer.get(i);
-            if (chofer.getCedula_chofer().equals(cedula)) {
-                return chofer;
+            if (lista_chofer.get(i).getCedula_chofer().equals(cedula)) {
+                return lista_chofer.get(i);
             }
         }
         return null;
@@ -99,62 +99,9 @@ public class Api_Modelo {
         return false;
     }
 
-  
-
-    public boolean ingresar_carro(Carro_modelo carro) {
-        exigirConexion();
-        // Insertar en la matriz desarmando el objeto en 3 columnas
-        for (int i = 0; i < 3; i++) {
-            if (lista_carros[i][0] == null) { // Si la fila está libre
-                lista_carros[i][0] = carro.getPlaca_carro();
-                lista_carros[i][1] = carro.getMarca_carro();
-                lista_carros[i][2] = carro.getModelo_carro();
-                return true;
-            }
-        }
-        return false; // Matriz llena
-    }
-
-    public Carro_modelo buscar_carro(String placa) {
-        exigirConexion();
-        for (int i = 0; i < 3; i++) {
-            if (lista_carros[i][0] != null && lista_carros[i][0].equals(placa)) {
-                // Reconstruimos el objeto para devolvérselo al controlador
-                return new Carro_modelo(lista_carros[i][0], lista_carros[i][1], lista_carros[i][2]); // Placa, Marca, Modelo
-            }
-        }
-        return null;
-    }
-
-    public boolean actualizar_carro(String placaVieja, Carro_modelo nuevoCarro) {
-        exigirConexion();
-        for (int i = 0; i < 3; i++) {
-            if (lista_carros[i][0] != null && lista_carros[i][0].equals(placaVieja)) {
-                lista_carros[i][0] = nuevoCarro.getPlaca_carro();
-                lista_carros[i][1] = nuevoCarro.getMarca_carro();
-                lista_carros[i][2] = nuevoCarro.getModelo_carro();
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public boolean eliminar_carro(String placa) {
-        exigirConexion();
-        for (int i = 0; i < 3; i++) {
-            if (lista_carros[i][0] != null && lista_carros[i][0].equals(placa)) {
-                // Para eliminar, vaciamos las 3 columnas
-                lista_carros[i][0] = null;
-                lista_carros[i][1] = null;
-                lista_carros[i][2] = null;
-                return true;
-            }
-        }
-        return false;
-    }
-
-  
-
+    // ==========================================
+    // CRUD PASAJERO (Dinámico - Sin foreach)
+    // ==========================================
     public boolean ingresar_pasajero(Pasajero_modelo pasajero) {
         exigirConexion();
         return lista_pasajero.add(pasajero);
@@ -163,9 +110,8 @@ public class Api_Modelo {
     public Pasajero_modelo buscar_pasajero(String cedula) {
         exigirConexion();
         for (int i = 0; i < lista_pasajero.size(); i++) {
-            Pasajero_modelo pasajero = lista_pasajero.get(i);
-            if (pasajero.getCedula_pasajero().equals(cedula)) {
-                return pasajero;
+            if (lista_pasajero.get(i).getCedula_pasajero().equals(cedula)) {
+                return lista_pasajero.get(i);
             }
         }
         return null;
@@ -193,14 +139,88 @@ public class Api_Modelo {
         return false;
     }
 
+    // ==========================================
+    // CRUD CARRO (Estático - Matriz - Recorrido anidado)
+    // ==========================================
+    public boolean ingresar_carro(Carro_modelo carro) {
+        exigirConexion();
+        for (int f = 0; f < 3; f++) {
+            if (lista_carros[f][0] == null) { 
+                for (int c = 0; c < 3; c++) {
+                    if (c == 0) {
+                        lista_carros[f][c] = carro.getPlaca_carro();
+                    } else if (c == 1) {
+                        lista_carros[f][c] = carro.getMarca_carro();
+                    } else if (c == 2) {
+                        lista_carros[f][c] = carro.getModelo_carro();
+                    }
+                }
+                return true;
+            }
+        }
+        return false; // Matriz llena
+    }
 
+    public Carro_modelo buscar_carro(String placa) {
+        exigirConexion();
+        for (int f = 0; f < 3; f++) {
+            for (int c = 0; c < 3; c++) {
+                if (c == 0 && lista_carros[f][c] != null && lista_carros[f][c].equals(placa)) {
+                    return new Carro_modelo(lista_carros[f][0], lista_carros[f][1], lista_carros[f][2]); 
+                }
+            }
+        }
+        return null;
+    }
+
+    public boolean actualizar_carro(String placaVieja, Carro_modelo nuevoCarro) {
+        exigirConexion();
+        for (int f = 0; f < 3; f++) {
+            for (int c = 0; c < 3; c++) {
+                if (c == 0 && lista_carros[f][c] != null && lista_carros[f][c].equals(placaVieja)) {
+                    for (int k = 0; k < 3; k++) {
+                        if (k == 0) lista_carros[f][k] = nuevoCarro.getPlaca_carro();
+                        if (k == 1) lista_carros[f][k] = nuevoCarro.getMarca_carro();
+                        if (k == 2) lista_carros[f][k] = nuevoCarro.getModelo_carro();
+                    }
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public boolean eliminar_carro(String placa) {
+        exigirConexion();
+        for (int f = 0; f < 3; f++) {
+            for (int c = 0; c < 3; c++) {
+                if (c == 0 && lista_carros[f][c] != null && lista_carros[f][c].equals(placa)) {
+                    for (int k = 0; k < 3; k++) {
+                        lista_carros[f][k] = null;
+                    }
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    // ==========================================
+    // CRUD MOTOR (Estático - Matriz - Recorrido anidado)
+    // ==========================================
     public boolean ingresar_motor(Motor_modelo motor) {
         exigirConexion();
-        for (int i = 0; i < 3; i++) {
-            if (lista_motores[i][0] == null) {
-                lista_motores[i][0] = motor.getNumero_serie();
-                lista_motores[i][1] = motor.getTipo_motor();
-                lista_motores[i][2] = motor.getCaballos_fuerza();
+        for (int f = 0; f < 3; f++) {
+            if (lista_motores[f][0] == null) {
+                for (int c = 0; c < 3; c++) {
+                    if (c == 0) {
+                        lista_motores[f][c] = motor.getNumero_serie();
+                    } else if (c == 1) {
+                        lista_motores[f][c] = motor.getTipo_motor();
+                    } else if (c == 2) {
+                        lista_motores[f][c] = motor.getCaballos_fuerza();
+                    }
+                }
                 return true;
             }
         }
@@ -209,10 +229,11 @@ public class Api_Modelo {
 
     public Motor_modelo buscar_motor(String numeroSerie) {
         exigirConexion();
-        for (int i = 0; i < 3; i++) {
-            if (lista_motores[i][0] != null && lista_motores[i][0].equals(numeroSerie)) {
-                // Reconstruimos el objeto 
-                return new Motor_modelo(lista_motores[i][1], lista_motores[i][2], lista_motores[i][0]); // Tipo, Caballos, Serie
+        for (int f = 0; f < 3; f++) {
+            for (int c = 0; c < 3; c++) {
+                if (c == 0 && lista_motores[f][c] != null && lista_motores[f][c].equals(numeroSerie)) {
+                    return new Motor_modelo(lista_motores[f][1], lista_motores[f][2], lista_motores[f][0]); // Tipo, Caballos, Serie
+                }
             }
         }
         return null;
@@ -220,12 +241,16 @@ public class Api_Modelo {
 
     public boolean actualizar_motor(String serieVieja, Motor_modelo nuevoMotor) {
         exigirConexion();
-        for (int i = 0; i < 3; i++) {
-            if (lista_motores[i][0] != null && lista_motores[i][0].equals(serieVieja)) {
-                lista_motores[i][0] = nuevoMotor.getNumero_serie();
-                lista_motores[i][1] = nuevoMotor.getTipo_motor();
-                lista_motores[i][2] = nuevoMotor.getCaballos_fuerza();
-                return true;
+        for (int f = 0; f < 3; f++) {
+            for (int c = 0; c < 3; c++) {
+                if (c == 0 && lista_motores[f][c] != null && lista_motores[f][c].equals(serieVieja)) {
+                    for (int k = 0; k < 3; k++) {
+                        if (k == 0) lista_motores[f][k] = nuevoMotor.getNumero_serie();
+                        if (k == 1) lista_motores[f][k] = nuevoMotor.getTipo_motor();
+                        if (k == 2) lista_motores[f][k] = nuevoMotor.getCaballos_fuerza();
+                    }
+                    return true;
+                }
             }
         }
         return false;
@@ -233,12 +258,14 @@ public class Api_Modelo {
 
     public boolean eliminar_motor(String numeroSerie) {
         exigirConexion();
-        for (int i = 0; i < 3; i++) {
-            if (lista_motores[i][0] != null && lista_motores[i][0].equals(numeroSerie)) {
-                lista_motores[i][0] = null;
-                lista_motores[i][1] = null;
-                lista_motores[i][2] = null;
-                return true;
+        for (int f = 0; f < 3; f++) {
+            for (int c = 0; c < 3; c++) {
+                if (c == 0 && lista_motores[f][c] != null && lista_motores[f][c].equals(numeroSerie)) {
+                    for (int k = 0; k < 3; k++) {
+                        lista_motores[f][k] = null;
+                    }
+                    return true;
+                }
             }
         }
         return false;
