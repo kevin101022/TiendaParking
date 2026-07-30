@@ -108,7 +108,7 @@ public class Api_Modelo {
             if (lista_carros[i][0] == null) { // Si la fila está libre
                 lista_carros[i][0] = carro.getPlaca_carro();
                 lista_carros[i][1] = carro.getMarca_carro();
-                lista_carros[i][2] = carro.getColor_carro();
+                lista_carros[i][2] = carro.getModelo_carro();
                 return true;
             }
         }
@@ -120,7 +120,7 @@ public class Api_Modelo {
         for (int i = 0; i < 3; i++) {
             if (lista_carros[i][0] != null && lista_carros[i][0].equals(placa)) {
                 // Reconstruimos el objeto para devolvérselo al controlador
-                return new Carro_modelo(lista_carros[i][0], lista_carros[i][2], lista_carros[i][1]); // Placa, Color, Marca
+                return new Carro_modelo(lista_carros[i][0], lista_carros[i][1], lista_carros[i][2]); // Placa, Marca, Modelo
             }
         }
         return null;
@@ -132,7 +132,7 @@ public class Api_Modelo {
             if (lista_carros[i][0] != null && lista_carros[i][0].equals(placaVieja)) {
                 lista_carros[i][0] = nuevoCarro.getPlaca_carro();
                 lista_carros[i][1] = nuevoCarro.getMarca_carro();
-                lista_carros[i][2] = nuevoCarro.getColor_carro();
+                lista_carros[i][2] = nuevoCarro.getModelo_carro();
                 return true;
             }
         }

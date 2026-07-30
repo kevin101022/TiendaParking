@@ -12,7 +12,8 @@ public class Menu_vista {
         System.out.println("3. Registrar motor");
         System.out.println("4. Registrar pasajero");
         System.out.println("0. Salir");
-        System.out.print("Seleccione una opción: ");
+        System.out.println("\n* NOTA: Cuando termines de registrar los 4 datos, presiona '5' para GUARDAR LA FICHA DE VIAJE.");
+        System.out.print("\nSeleccione una opción: ");
 
         String entrada = obj_teclado.nextLine();
         try {
@@ -24,7 +25,7 @@ public class Menu_vista {
 
     // Opción fuera de rango
     public void mostrarOpcionInvalida() {
-        System.out.println("  Opción inválida. Ingrese un número del 0 al 4.");
+        System.out.println("  Opción inválida. Ingrese un número del 0 al 5.");
     }
 
     // Salida

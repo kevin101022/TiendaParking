@@ -54,7 +54,7 @@ public class Chofer_vista {
 
         try {
             chofer_modelo obj_chofer = obj_controller.registrarChofer(nombre_chofer, apellido_chofer, cedula_chofer, licencia_chofer);
-            System.out.println("Chofer registrado correctamente:\n"
+            System.out.println("Chofer registrado temporalmente en la Ficha de Viaje:\n"
                     + "Nombre del chofer: " + obj_chofer.getNombre_chofer() + "\n"
                     + "Apellido del chofer: " + obj_chofer.getApellido_chofer() + "\n"
                     + "Cédula del chofer: " + obj_chofer.getCedula_chofer() + "\n"

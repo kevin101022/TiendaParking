@@ -44,7 +44,7 @@ public class Pasajero_vista {
 
         try {
             Pasajero_modelo obj_pasajero = obj_controller.registrarPasajero(nombre_pasajero, apellido_pasajero, cedula_pasajero);
-            System.out.println("Pasajero registrado correctamente:\n"
+            System.out.println("Pasajero registrado temporalmente en la Ficha de Viaje:\n"
                     + "Nombre del pasajero: " + obj_pasajero.getNombre_pasajero() + "\n"
                     + "Apellido del pasajero: " + obj_pasajero.getApellido_pasajero() + "\n"
                     + "Cédula del pasajero: " + obj_pasajero.getCedula_pasajero());

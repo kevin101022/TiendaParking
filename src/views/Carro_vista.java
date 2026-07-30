@@ -22,13 +22,13 @@ public class Carro_vista {
             }
         }
 
-        // Pedir color
-        String color_carro = "";
-        while (color_carro.trim().isEmpty()) {
-            System.out.print("Ingrese el color del carro: ");
-            color_carro = obj_teclado.nextLine();
-            if (color_carro.trim().isEmpty()) {
-                System.out.println("  El color no puede estar vacío. Intente de nuevo.");
+        // Pedir modelo
+        String modelo_carro = "";
+        while (modelo_carro.trim().isEmpty()) {
+            System.out.print("Ingrese el modelo del carro: ");
+            modelo_carro = obj_teclado.nextLine();
+            if (modelo_carro.trim().isEmpty()) {
+                System.out.println("  El modelo no puede estar vacío. Intente de nuevo.");
             }
         }
 
@@ -43,11 +43,11 @@ public class Carro_vista {
         }
 
         try {
-            Carro_modelo obj_carro = obj_controller.registrarCarro(placa_carro, color_carro, marca_carro);
-            System.out.println("Carro registrado correctamente:\n"
+            Carro_modelo obj_carro = obj_controller.registrarCarro(placa_carro, marca_carro, modelo_carro);
+            System.out.println("Carro registrado temporalmente en la Ficha de Viaje:\n"
                     + "Placa del carro: " + obj_carro.getPlaca_carro() + "\n"
-                    + "Color del carro: " + obj_carro.getColor_carro() + "\n"
-                    + "Marca del carro: " + obj_carro.getMarca_carro());
+                    + "Marca del carro: " + obj_carro.getMarca_carro() + "\n"
+                    + "Modelo del carro: " + obj_carro.getModelo_carro());
         } catch (RuntimeException e) {
             System.out.println("Error de validación: " + e.getMessage());
         }

@@ -55,7 +55,7 @@ public class Motor_vista {
 
         try {
             Motor_modelo obj_motor = obj_controller.registrarMotor(tipo_motor, caballos_fuerza, numero_serie);
-            System.out.println("Motor registrado correctamente:\n"
+            System.out.println("Motor registrado temporalmente en la Ficha de Viaje:\n"
                     + "Tipo de motor: " + obj_motor.getTipo_motor() + "\n"
                     + "Caballos de fuerza: " + obj_motor.getCaballos_fuerza() + "\n"
                     + "Número de serie: " + obj_motor.getNumero_serie());
